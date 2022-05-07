@@ -35,5 +35,3 @@ def plot_parity_chemprop(y_true, y_pred, filename, y_pred_unc=None):
     plt.savefig(filename)
     
     return
-
-plot_parity_chemprop([0.5, 0.3], [0.1, 0.2], 'test.png')

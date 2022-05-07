@@ -256,7 +256,7 @@ def load_model(fpath, model, optimizer):
     val_losses = checkpoint['val losses']
     return model, optimizer, train_losses, val_losses
 
-def train_model(smiles_train,smiles_test,rt_train,rt_test):
+def train_model(smiles_train,smiles_test,rt_train,rt_test,num_epochs):
     # first featurize randomly split data
     AtomicNum_tr,Edge_tr,Natom_tr,y_tr = featurize(smiles_train,rt_train)
     AtomicNum_ts,Edge_ts,Natom_ts,y_ts = featurize(smiles_test,rt_test)
@@ -288,7 +288,7 @@ def train_model(smiles_train,smiles_test,rt_train,rt_test):
     train_losses = []
     val_losses = []
 
-    for epoch in range(500):    
+    for epoch in range(num_epochs):    
         train_loss = loop(model, optimizer, device, train_loader, epoch)
         val_loss = loop(model, optimizer, device, val_loader, epoch, evaluation=True)
         train_losses.append(train_loss)

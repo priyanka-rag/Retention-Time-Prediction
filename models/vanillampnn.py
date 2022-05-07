@@ -163,7 +163,7 @@ class VanillaMPNN(torch.nn.Module):
     '''
         A Vanilla MPNN model 
     '''
-    def __init__(self, n_convs=3, n_embed=64):
+    def __init__(self, n_convs=6, n_embed=48):
         super(VanillaMPNN, self).__init__()
         
         self.atom_embed = nn.Embedding(100, n_embed)

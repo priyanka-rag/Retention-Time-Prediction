@@ -302,7 +302,7 @@ def train_model(smiles_train,smiles_test,rt_train,rt_test,num_epochs,name):
                     'train losses': train_losses,
                     'val losses': val_losses}
     save_model(final_model, path + "/saved_models/" + name + ".pt")
-    return model,test_loader
+    return model
 
 def plot_loss_curve(train_losses,val_losses):
     fig, ax = plt.subplots(figsize=(6, 4))

@@ -284,6 +284,7 @@ def train_model(smiles_train,smiles_test,rt_train,rt_test,num_epochs,name):
     device = 'cuda:0'
     model = VanillaMPNN(n_convs=6, n_embed=48).to(device) # hyperparams from the paper
     optimizer = optim.Adam(model.parameters(), lr=1e-4)
+    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', factor=0.5, verbose=True)
 
     # now train and save the model
     train_losses = []
@@ -294,6 +295,7 @@ def train_model(smiles_train,smiles_test,rt_train,rt_test,num_epochs,name):
         val_loss = loop(model, optimizer, device, val_loader, epoch, evaluation=True)
         train_losses.append(train_loss)
         val_losses.append(val_loss)
+        scheduler.step(val_loss)
     
     final_model = {'state_dict': model.state_dict(),
                     'optimizer':  optimizer.state_dict(),

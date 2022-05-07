@@ -4,7 +4,7 @@ Authors: Priyanka Raghavan, Jenna Fromer, Nathan Stover
 
 Repository Organization:
 - Baselines: contains Linear, KNN, and Vanilla MPNN baseline models
-- Data: contains Random and Scaffold splits
+- Data: contains data processing code, and Random and Scaffold splits
 - Saved Models: contains FFN, Vanilla MPNN, and Chemprop saved models for random and scaffold splits
 - Uncertainty: 
 - Figs: contains figures of results

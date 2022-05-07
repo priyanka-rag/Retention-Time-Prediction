@@ -300,5 +300,27 @@ def train_model(smiles_train,smiles_test,rt_train,rt_test,num_epochs):
                     'val losses': val_losses}
     save_model(final_model, path + "/saved_models.pt")
     return model
+   
+def predict_retention_times(model,loader,device):
+  y_true = []
+  y_pred = []
 
-smiles_train,smiles_test,fgp_train,fgp_test,rt_train,rt_test = read_randomsplit_data()
+  model.eval()
+  for batch in loader:
+        AtomicNumber, Edge, Natom, y = batch 
+        AtomicNumber = AtomicNumber.to(device)
+        Edge = Edge.to(device)
+        y = y.to(device)
+        pred = model(AtomicNumber, Edge, Natom)
+        y_true.append(y.cpu().detach().numpy())
+        y_pred.append(pred.cpu().detach().numpy())
+  
+  
+  y_true = np.concatenate(y_true).ravel()
+  y_pred = np.concatenate(y_pred).ravel()
+  mae = mean_absolute_error(y_true,y_pred)
+  medae = median_absolute_error(y_true,y_pred)
+  mre = mean_absolute_percentage_error(y_true,y_pred)
+  r2 = r2_score(y_true,y_pred)
+
+  return y_true,y_pred,mae,medae,mre,r2

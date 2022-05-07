@@ -300,6 +300,17 @@ def train_model(smiles_train,smiles_test,rt_train,rt_test,num_epochs):
                     'val losses': val_losses}
     save_model(final_model, path + "/saved_models.pt")
     return model
+
+def plot_loss_curve(train_losses,val_losses):
+    fig, ax = plt.subplots(figsize=(6, 4))
+    ax.plot(train_losses, label='Training Loss')
+    ax.plot(val_losses, label='Validation Loss')
+    ax.set_xlabel('Epoch')
+    ax.set_ylabel('MSE Loss')
+    ax.legend(loc='upper right')
+    fig.tight_layout()
+    plt.savefig(path + '/figs/vanillampnn_loss_curve.png')
+    return 
    
 def predict_retention_times(model,loader,device):
   y_true = []

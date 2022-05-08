@@ -257,7 +257,7 @@ def load_model(fpath, model, optimizer):
     val_losses = checkpoint['val losses']
     return model, optimizer, train_losses, val_losses
 
-def train_model(smiles_train,smiles_test,rt_train,rt_test,num_epochs,name):
+def train_model(smiles_train,smiles_test,rt_train,rt_test,num_epochs,name,isEnsemble):
     # first featurize randomly split data
     AtomicNum_tr,Edge_tr,Natom_tr,y_tr = featurize(smiles_train,rt_train)
     AtomicNum_ts,Edge_ts,Natom_ts,y_ts = featurize(smiles_test,rt_test)
@@ -280,6 +280,8 @@ def train_model(smiles_train,smiles_test,rt_train,rt_test,num_epochs,name):
                             batch_size=512, 
                             collate_fn=collate_graphs,shuffle=True)
     
+    if isEnsemble: torch.manual_seed(random.randint(1,100))
+         
     #define model and optimizer 
     device = 'cuda:0'
     model = VanillaMPNN(n_convs=6, n_embed=48).to(device) # hyperparams from the paper

@@ -26,10 +26,18 @@ def mpnn_ensembling():
     for i in range(5):
         ensemble_model = train_model(smiles_train,smiles_test,rt_train,rt_test,750,'vanillampnn_rt_model_ensemble_' + str(i),True)
         y_true,y_pred,mae,medae,mpe,r2 = predict_retention_times(ensemble_model,test_loader)
-        predictions.append(y_pred.tolist())
+
+        # remove non-retained molecules
+        nrt_idx = [i for i in range(len(y_true)) if y_true[i] < 5]
+        y_pred = [y_pred[i] for i in range(len(y_pred)) if i not in nrt_idx]
+
+        predictions.append(y_pred)
     
     avgs = [sum(col)/float(len(col)) for col in zip(*predictions)]
     stds = [np.std(col) for col in zip(*predictions)]
-    plot_parity_chemprop(avgs,stds,path + '/figs/vanillampnn_ensembling_results.png')
+    plt.scatter(avgs,stds,color = (196/255,147/255,176/255), marker='o', edgecolor='w', alpha=1)
+    plt.xlabel('Average Predicted RT (min)')
+    plt.ylabel('Uncertainty (min)')
+    plt.savefig(path + '/figs/vanillampnn_ensembling_results.png')
 
     return avgs,stds

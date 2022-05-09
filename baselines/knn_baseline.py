@@ -13,6 +13,7 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import median_absolute_error
 from sklearn.metrics import mean_absolute_percentage_error
+from sklearn.metrics import r2_score
 
 def optimize_knn(X_train,y_train): #hyperparameter optimization for KNN
    knn_params = {'knn_model__n_neighbors': [5,20,50,100]}
@@ -29,9 +30,16 @@ def knn_reg(best_params,X_train,X_test,y_train,y_test):
    knn_model = KNeighborsRegressor(n_neighbors=best_params['knn_model__n_neighbors'])
    knn_model.fit(X_train,y_train)
    y_pred = knn_model.predict(X_test)
+
+   # remove non-retained molecules
+   #nrt_idx = [i for i in range(len(y_test)) if y_test[i] < 5]
+   #y_test = [y_test[i] for i in range(len(y_test)) if i not in nrt_idx]
+   #y_pred = [y_pred[i] for i in range(len(y_pred)) if i not in nrt_idx]
+
    mae = mean_absolute_error(y_test,y_pred)
    medae = median_absolute_error(y_test,y_pred)
    mre = mean_absolute_percentage_error(y_test,y_pred)
-   plot_parity_chemprop(y_test,y_pred,'knn_parity.png')
+   r2 = r2_score(y_test,y_pred)
+   #plot_parity_chemprop(y_test,y_pred,'knn_parity.png')
 
-   return mae,medae,mre
+   return mae,medae,mre,r2
